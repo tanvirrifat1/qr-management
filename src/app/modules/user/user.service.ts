@@ -153,6 +153,8 @@ const getUserDetails = async (id: string) => {
   if (!user) {
     throw new ApiError(StatusCodes.BAD_REQUEST, "User doesn't exist!");
   }
+  console.log(user);
+
   return user;
 };
 
