@@ -1,0 +1,170 @@
+// order
+
+// const createOrder = async (payload: IOrder) => {
+//   payload.orderId = generateOrderId();
+
+//   // Fetch all products by IDs
+//   const productIds = payload.items.map(i => i.productId);
+//   const products = await Product.find({ _id: { $in: productIds } }).select(
+//     'title userId'
+//   );
+
+//   // Check if any product is missing
+//   if (products.length !== productIds.length) {
+//     throw new ApiError(
+//       StatusCodes.BAD_REQUEST,
+//       'One or more products not found'
+//     );
+//   }
+
+//   // Fetch user details
+//   const user = await User.findById(payload.userId).select('firstName lastName');
+//   if (!user) {
+//     throw new ApiError(StatusCodes.NOT_FOUND, 'User not found');
+//   }
+
+//   // Prepare order payload
+//   const orderData = {
+//     ...payload,
+//     firstName: user.firstName,
+//     lastName: user.lastName,
+//   };
+
+//   // Create order
+//   const order = await Order.create(orderData);
+
+//   // Send notifications concurrently
+//   const notificationPromises = products.map(product =>
+//     sendNotifications({
+//       text: `Product ${product.title} has been ordered`,
+//       receiver: product.userId,
+//       // type: 'ADMIN',
+//     })
+//   );
+
+//   await Promise.all(notificationPromises);
+
+//   return order;
+// };
+
+// const getOrderBySeller = async (
+//   userId: string,
+//   query: Record<string, unknown>
+// ) => {
+//   const { page = '1', limit = '10', ...filters } = query;
+
+//   const conditions: any[] = [];
+
+//   // ✅ Find orders that contain at least ONE item of this seller
+//   conditions.push({
+//     'items.productId': { $exists: true },
+//   });
+
+//   if (Object.keys(filters).length) {
+//     conditions.push({
+//       $and: Object.entries(filters).map(([key, value]) => ({ [key]: value })),
+//     });
+//   }
+
+//   const where = conditions.length ? { $and: conditions } : {};
+
+//   const pageNumber = parseInt(page as string, 10);
+//   const pageSize = parseInt(limit as string, 10);
+//   const skip = (pageNumber - 1) * pageSize;
+
+//   const [orders, total] = await Promise.all([
+//     Order.find(where)
+//       .populate({
+//         path: 'items.productId',
+//         model: 'Product',
+//         select: 'title image brand userId',
+//       })
+//       .populate({
+//         path: 'userId',
+//         select: 'fistName lastName email image',
+//       })
+//       .sort({ createdAt: -1 })
+//       .skip(skip)
+//       .limit(pageSize)
+//       .lean(),
+
+//     Order.countDocuments(where),
+//   ]);
+
+//   // ✅ ✅ ✅ FILTER ITEMS BASED ON PRODUCT.USERID
+//   const filteredOrders = orders.map(order => {
+//     const filteredItems = order.items.filter((item: any) => {
+//       return item.productId?.userId?.toString() === userId.toString();
+//     });
+
+//     return {
+//       ...order,
+//       items: filteredItems, // ✅ Only seller's products
+//     };
+//   });
+
+//   return {
+//     result: filteredOrders,
+//     meta: { page: pageNumber, total },
+//   };
+// };
+
+// const getAllOrderforBuyer = async (
+//   userId: string,
+//   query: Record<string, unknown>
+// ) => {
+//   const { searchTerm, name, page = '1', limit = '10', ...filters } = query;
+
+//   const conditions: any[] = [{ userId }];
+
+//   // Search term condition
+//   if (searchTerm) {
+//     conditions.push({
+//       $or: [
+//         { paymentStatus: { $regex: searchTerm as string, $options: 'i' } },
+//         { deliveryStatus: { $regex: searchTerm as string, $options: 'i' } },
+//       ],
+//     });
+//   }
+
+//   // Additional filters
+//   if (Object.keys(filters).length) {
+//     conditions.push({
+//       $and: Object.entries(filters).map(([key, value]) => ({ [key]: value })),
+//     });
+//   }
+
+//   const where = conditions.length ? { $and: conditions } : {};
+
+//   // Pagination
+//   const pageNumber = parseInt(page as string, 10);
+//   const pageSize = parseInt(limit as string, 10);
+//   const skip = (pageNumber - 1) * pageSize;
+
+//   // Fetch products with category populated
+//   const [order, total] = await Promise.all([
+//     Order.find(where)
+//       .populate({
+//         path: 'items.productId',
+//         model: 'Product',
+//         select: 'title image brand',
+//       })
+//       .populate({
+//         path: 'userId',
+//         select: 'fistName lastName email image',
+//       })
+//       .sort({ createdAt: -1 })
+//       .skip(skip)
+//       .limit(pageSize)
+//       .lean(),
+//     Order.countDocuments(where),
+//   ]);
+
+//   return {
+//     result: order,
+//     meta: {
+//       page: pageNumber,
+//       total,
+//     },
+//   };
+// };
