@@ -19,6 +19,7 @@ import { WalletRoutes } from '../app/modules/wallet/wallet.router';
 import { WithdrawRoutes } from '../app/modules/withdrowMoney/withdrowMoney.route';
 import { SellerAccountHelthRoutes } from '../app/modules/sellerAccountHelth/sellerAccountHelth.route';
 import { AdminAccountHealthRoutes } from '../app/modules/adminAccountHealth/adminAccountHealth.route';
+import { WishListRoutes } from '../app/modules/wishlist/wishlist.route';
 
 const router = express.Router();
 
@@ -43,6 +44,7 @@ const apiRoutes = [
   { path: '/withdraw', route: WithdrawRoutes },
   { path: '/account-health-response', route: SellerAccountHelthRoutes },
   { path: '/admin-account-health', route: AdminAccountHealthRoutes },
+  { path: '/wishlist', route: WishListRoutes },
 ];
 
 apiRoutes.forEach(route => router.use(route.path, route.route));
