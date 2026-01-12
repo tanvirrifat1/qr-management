@@ -102,6 +102,8 @@ const createOrder = async (payload: any) => {
 
     const orderData = {
       userId: payload.userId,
+      size: item.size,
+      color: item.color,
 
       // 🔥 Item specific
       productId: item.productId,

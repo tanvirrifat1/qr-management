@@ -24,6 +24,7 @@ export type IProduct = {
   careInsturction: string;
   origin: string;
   closureType: string;
+  color: string[];
 };
 
 export type UpdateProductPayload = Partial<IProduct> & {

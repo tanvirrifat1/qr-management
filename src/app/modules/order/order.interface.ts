@@ -40,4 +40,6 @@ export type IOrder = {
   state: string;
   country?: string;
   billingAddress: string;
+  color?: string;
+  size: string;
 };

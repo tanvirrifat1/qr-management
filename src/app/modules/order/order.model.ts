@@ -167,6 +167,14 @@ const orderSchema = new Schema<IOrder>(
       type: String,
       required: true,
     },
+    color: {
+      type: String,
+      required: false,
+    },
+    size: {
+      type: String,
+      required: false,
+    },
   },
   {
     timestamps: true,

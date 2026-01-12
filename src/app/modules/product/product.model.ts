@@ -38,6 +38,7 @@ const proudctSchema = new Schema<IProduct>(
     closureType: { type: String, required: false },
     frbricType: { type: String, required: false },
     origin: { type: String, required: false },
+    color: [{ type: String, required: false }],
   },
   { timestamps: true }
 );
