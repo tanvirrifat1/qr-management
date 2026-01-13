@@ -305,16 +305,17 @@ const getAllOrderforBuyer = async (
 
   const [order, total] = await Promise.all([
     Order.find(where)
-      // .populate({
-      //   path: 'items.productId',
-      //   model: 'Product',
-      //   select: 'title image brand',
-      // })
-      .populate('productId')
       .populate({
-        path: 'userId',
-        select: 'fistName lastName email image',
+        path: 'productId',
+        populate: {
+          path: 'userId',
+          select: 'firstName lastName email image',
+        },
       })
+      // .populate({
+      //   path: 'userId',
+      //   select: 'fistName lastName email image',
+      // })
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(pageSize)

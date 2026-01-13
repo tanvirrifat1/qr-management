@@ -169,11 +169,11 @@ const orderSchema = new Schema<IOrder>(
     },
     color: {
       type: String,
-      required: false,
+      required: true,
     },
     size: {
       type: String,
-      required: false,
+      required: true,
     },
   },
   {
