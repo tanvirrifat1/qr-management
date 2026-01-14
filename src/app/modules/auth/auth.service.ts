@@ -77,7 +77,6 @@ const googleLogin = async ({
 
   return { accessToken, refreshToken, user };
 };
-
 //login
 const loginUserFromDB = async (payload: ILoginData) => {
   const { email, password } = payload;
