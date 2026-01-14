@@ -25,7 +25,7 @@ router.get(
 
 router.get(
   '/get-single-order/:id',
-  auth(USER_ROLES.SELLER),
+  auth(USER_ROLES.SELLER, USER_ROLES.BUYER),
   OrderController.getSingleOrder
 );
 
