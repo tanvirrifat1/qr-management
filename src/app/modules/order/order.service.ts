@@ -399,13 +399,13 @@ const getOrderBySeller = async (
 };
 
 const getSingleOrder = async (orderId: string) => {
-  const isExist = await Order.findById(orderId).populate('productId');
-  if (!isExist) {
+  const order = await Order.findById(orderId).populate('productId');
+
+  if (!order) {
     throw new ApiError(StatusCodes.NOT_FOUND, 'Order not found');
   }
 
-  const result = await Order.findById(orderId);
-  return result;
+  return order;
 };
 
 export const OrderService = {
