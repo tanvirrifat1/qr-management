@@ -399,7 +399,7 @@ const getOrderBySeller = async (
 };
 
 const getSingleOrder = async (orderId: string) => {
-  const isExist = await Order.findById(orderId);
+  const isExist = await Order.findById(orderId).populate('productId');
   if (!isExist) {
     throw new ApiError(StatusCodes.NOT_FOUND, 'Order not found');
   }
