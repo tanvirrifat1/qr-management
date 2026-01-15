@@ -373,40 +373,46 @@ const getProductByUserId = async (
   id: string,
   query: Record<string, unknown>
 ) => {
-  const { page = 1, limit = 10, searchTerm, ...filterData } = query;
+  const { searchTerm, page = '1', limit = '10', ...filters } = query;
 
-  const andConditions: any[] = [{ userId: id }];
+  const conditions: any[] = [{ userId: id }];
 
-  // Search term conditions
-
-  // Filter conditions (dynamic fields)
-  if (Object.keys(filterData).length > 0) {
-    andConditions.push(filterData);
+  if (searchTerm) {
+    conditions.push({
+      $or: [{ status: { $regex: searchTerm as string, $options: 'i' } }],
+    });
   }
 
-  const whereConditions =
-    andConditions.length > 0 ? { $and: andConditions } : {};
+  if (Object.keys(filters).length) {
+    conditions.push({
+      $and: Object.entries(filters).map(([key, value]) => ({ [key]: value })),
+    });
+  }
 
-  const skip = (Number(page) - 1) * Number(limit);
+  const where = { $and: conditions };
 
-  const productQuery = Product.find(whereConditions)
-    .populate({ path: 'categoryId', select: 'title -_id' })
-    .populate({ path: 'subCategoryId', select: 'title -_id' })
-    .sort({ createdAt: -1 })
-    .skip(skip)
-    .limit(Number(limit))
-    .lean();
+  // Pagination
+  const pageNumber = parseInt(page as string, 10);
+  const pageSize = parseInt(limit as string, 10);
+  const skip = (pageNumber - 1) * pageSize;
 
-  const [result, count] = await Promise.all([
-    productQuery,
-    Product.countDocuments(whereConditions),
+  // Fetch orders with populate
+  const [order, total] = await Promise.all([
+    Product.find(where)
+
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(pageSize)
+      .lean(),
+
+    Product.countDocuments(where),
   ]);
 
   return {
-    result,
+    result: order,
     meta: {
-      page: Number(page),
-      total: count,
+      page: pageNumber,
+      total,
     },
   };
 };
