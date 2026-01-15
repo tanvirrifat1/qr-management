@@ -59,9 +59,9 @@ async function main() {
 main();
 
 // SIGTERM
-process.on('SIGTERM', () => {
-  logger.info('SIGTERM IS RECEIVE');
-  if (server) {
-    server.close();
-  }
-});
+// process.on('SIGTERM', () => {
+//   logger.info('SIGTERM IS RECEIVE');
+//   if (server) {
+//     server.close();
+//   }
+// });

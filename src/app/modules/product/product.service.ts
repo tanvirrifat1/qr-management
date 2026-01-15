@@ -369,6 +369,48 @@ const getAllDiscoutProduct = async (query: Record<string, unknown>) => {
   };
 };
 
+const getProductByUserId = async (
+  id: string,
+  query: Record<string, unknown>
+) => {
+  const { page = 1, limit = 10, searchTerm, ...filterData } = query;
+
+  const andConditions: any[] = [{ userId: id }];
+
+  // Search term conditions
+
+  // Filter conditions (dynamic fields)
+  if (Object.keys(filterData).length > 0) {
+    andConditions.push(filterData);
+  }
+
+  const whereConditions =
+    andConditions.length > 0 ? { $and: andConditions } : {};
+
+  const skip = (Number(page) - 1) * Number(limit);
+
+  const productQuery = Product.find(whereConditions)
+    .populate({ path: 'categoryId', select: 'title -_id' })
+    .populate({ path: 'subCategoryId', select: 'title -_id' })
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(Number(limit))
+    .lean();
+
+  const [result, count] = await Promise.all([
+    productQuery,
+    Product.countDocuments(whereConditions),
+  ]);
+
+  return {
+    result,
+    meta: {
+      page: Number(page),
+      total: count,
+    },
+  };
+};
+
 export const ProductServiceHello = {
   createProductFromDb,
   getAllProducts,
@@ -377,4 +419,5 @@ export const ProductServiceHello = {
   deleteProduct,
   getAllDiscoutProduct,
   getSingleProduct,
+  getProductByUserId,
 };
