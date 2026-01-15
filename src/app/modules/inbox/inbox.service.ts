@@ -74,7 +74,7 @@ const getAllInboxFromDb = async (
       inboxId: msg._id,
       receiverId: receiver._id || null,
       image: receiver.image || null,
-      name: receiver.name || null,
+      name: receiver.firstName || null,
       lastMessage: lastMessageMap.get(msg._id.toString()) || null,
       unreadCount: msg.unreadCount,
     };

@@ -20,6 +20,7 @@ import { WithdrawRoutes } from '../app/modules/withdrowMoney/withdrowMoney.route
 import { SellerAccountHelthRoutes } from '../app/modules/sellerAccountHelth/sellerAccountHelth.route';
 import { AdminAccountHealthRoutes } from '../app/modules/adminAccountHealth/adminAccountHealth.route';
 import { WishListRoutes } from '../app/modules/wishlist/wishlist.route';
+import { BuyerSupportRoutes } from '../app/modules/buyerSupport/buyerSupport.route';
 
 const router = express.Router();
 
@@ -45,6 +46,7 @@ const apiRoutes = [
   { path: '/account-health-response', route: SellerAccountHelthRoutes },
   { path: '/admin-account-health', route: AdminAccountHealthRoutes },
   { path: '/wishlist', route: WishListRoutes },
+  { path: '/buyer-support', route: BuyerSupportRoutes },
 ];
 
 apiRoutes.forEach(route => router.use(route.path, route.route));
