@@ -3,8 +3,6 @@ import { Server } from 'socket.io';
 import { logger } from '../shared/logger';
 import { Message } from '../app/modules/message/message.model';
 import { Inbox } from '../app/modules/inbox/inbox.model';
-import ApiError from '../errors/ApiError';
-import { StatusCodes } from 'http-status-codes';
 
 const socket = (io: Server) => {
   io.on('connection', socket => {

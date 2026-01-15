@@ -18,7 +18,7 @@ const createAdmin = async (payload: IUser) => {
 const getAllAdmins = async (query: Record<string, unknown>) => {
   const { page = 1, limit = 10, searchTerm, ...filters } = query;
 
-  const andConditions: any[] = [];
+  const andConditions: any[] = [{ role: USER_ROLES.ADMIN }];
 
   // Search condition
   if (searchTerm) {

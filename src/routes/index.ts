@@ -21,6 +21,7 @@ import { SellerAccountHelthRoutes } from '../app/modules/sellerAccountHelth/sell
 import { AdminAccountHealthRoutes } from '../app/modules/adminAccountHealth/adminAccountHealth.route';
 import { WishListRoutes } from '../app/modules/wishlist/wishlist.route';
 import { BuyerSupportRoutes } from '../app/modules/buyerSupport/buyerSupport.route';
+import { NotificationRoutes } from '../app/modules/notification/notification.route';
 
 const router = express.Router();
 
@@ -47,6 +48,7 @@ const apiRoutes = [
   { path: '/admin-account-health', route: AdminAccountHealthRoutes },
   { path: '/wishlist', route: WishListRoutes },
   { path: '/buyer-support', route: BuyerSupportRoutes },
+  { path: '/notification', route: NotificationRoutes },
 ];
 
 apiRoutes.forEach(route => router.use(route.path, route.route));

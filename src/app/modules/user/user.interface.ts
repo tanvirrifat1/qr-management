@@ -19,6 +19,7 @@ export type IUser = {
   country?: string;
   block?: boolean;
   googleId?: string;
+  phone?: string;
   authentication?: {
     isResetPassword: boolean;
     oneTimeCode: number;

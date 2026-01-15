@@ -17,7 +17,7 @@ router.get(
 );
 
 router.patch(
-  '/update-notification',
+  '/read-notification',
   auth(
     USER_ROLES.SELLER,
     USER_ROLES.BUYER,
@@ -34,7 +34,7 @@ router.get(
 );
 
 router.patch(
-  '/admin',
+  '/admin-read-notification',
   auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
   NotificationController.adminReadNotification
 );

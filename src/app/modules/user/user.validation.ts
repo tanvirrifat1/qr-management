@@ -19,6 +19,7 @@ const updateZodSchema = z.object({
   zip: z.number().optional(),
   state: z.string().optional(),
   country: z.string().optional(),
+  phone: z.string().optional(),
 });
 
 export const UserValidation = {

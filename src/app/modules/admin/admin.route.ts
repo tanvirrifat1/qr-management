@@ -16,7 +16,7 @@ router.post(
 
 router.get(
   '/get-all-admins',
-  auth(USER_ROLES.SUPER_ADMIN),
+  auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.BUYER),
   AdminController.getAllAdmins
 );
 

@@ -81,7 +81,10 @@ const userSchema = new Schema<IUser, UserModal>(
       type: Boolean,
       required: false,
     },
-
+    phone: {
+      type: String,
+      required: false,
+    },
     authentication: {
       type: {
         isResetPassword: {
