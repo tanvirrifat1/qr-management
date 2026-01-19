@@ -58,7 +58,7 @@ const handleStripeWebhookService = async (event: Stripe.Event) => {
 
       await Payment.findOneAndUpdate(
         { transactionId: session.payment_intent },
-        { status: 'failed' }
+        { status: 'failed' },
       );
 
       break;
@@ -182,7 +182,7 @@ export const handlePaymentSuccess = async (event: Stripe.Event) => {
           new: true,
           upsert: true,
           setDefaultsOnInsert: true,
-        }
+        },
       );
 
       await sendNotifications({
@@ -198,7 +198,7 @@ export const handlePaymentSuccess = async (event: Stripe.Event) => {
         $set: {
           paymentStatus: 'paid',
         },
-      }
+      },
     );
   } catch (error) {
     console.log(error);

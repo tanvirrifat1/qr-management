@@ -12,7 +12,7 @@ import { handlePaymentSuccess } from '../payment/payment.service';
 const createCheckoutSession = async (
   userId: string,
   packageId: string,
-  becomeASellerId: string
+  becomeASellerId: string,
 ) => {
   try {
     const [user, plan, becomeASeller] = await Promise.all([
@@ -52,7 +52,7 @@ const createCheckoutSession = async (
       ? error
       : new ApiError(
           StatusCodes.INTERNAL_SERVER_ERROR,
-          error?.message || 'Failed to create checkout session'
+          error?.message || 'Failed to create checkout session',
         );
   }
 };
@@ -108,7 +108,7 @@ const updateExpiredSubscriptions = async () => {
     // Update all users' subscription status to false
     await User.updateMany(
       { _id: { $in: expiredUserIds } },
-      { $set: { subscription: false } }
+      { $set: { subscription: false } },
     );
   } catch (error) {
     throw new ApiError(StatusCodes.BAD_REQUEST, 'Error updating subscriptions');
@@ -118,7 +118,7 @@ const updateExpiredSubscriptions = async () => {
 const getMySubscriptions = async (userId: string) => {
   try {
     const subscriptions = await Subscription.find({ userId }).populate(
-      'packageId'
+      'packageId',
     );
     return subscriptions;
   } catch (error) {
@@ -128,7 +128,7 @@ const getMySubscriptions = async (userId: string) => {
 
 const updateSubscriptionPlanService = async (
   userId: string,
-  newPackageId: string
+  newPackageId: string,
 ) => {
   // ---------------- Validate User ----------------
   const user = await User.findById(userId);
@@ -155,7 +155,7 @@ const updateSubscriptionPlanService = async (
   if (!stripeSubscription) {
     throw new ApiError(
       StatusCodes.BAD_REQUEST,
-      'Stripe subscription not found'
+      'Stripe subscription not found',
     );
   }
 
@@ -172,13 +172,13 @@ const updateSubscriptionPlanService = async (
         },
       ],
       proration_behavior: 'create_prorations',
-    }
+    },
   );
 
   if (!updatedStripeSubscription) {
     throw new ApiError(
       StatusCodes.BAD_REQUEST,
-      'Stripe subscription update failed'
+      'Stripe subscription update failed',
     );
   }
 
@@ -203,7 +203,7 @@ const updateSubscriptionPlanService = async (
   const updatedSub = await Subscription.findByIdAndUpdate(
     subscription._id,
     updateData,
-    { new: true }
+    { new: true },
   );
 
   return updatedSub;
