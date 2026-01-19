@@ -25,7 +25,35 @@ const createProductFromDb = catchAsync(async (req, res) => {
   sendResponse(res, {
     success: true,
     statusCode: StatusCodes.OK,
-    message: 'Images and media uploaded successfully',
+    message: 'Product uploaded successfully',
+    data: result,
+  });
+});
+
+//draft
+const createProductDraft = catchAsync(async (req, res) => {
+  const files = req.files as { [fieldname: string]: Express.MulterS3.File[] };
+
+  const userId = req.user.id;
+
+  // collect all uploaded images
+  const imageFiles = files?.['image'] || [];
+
+  // map image locations into an array
+  const imageUrls = imageFiles.map(file => file.location);
+
+  const value = {
+    ...req.body,
+    image: imageUrls, // <-- store array of URLs
+    userId,
+  };
+
+  const result = await ProductServiceHello.createProductDraft(value);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: 'Product uploaded successfully',
     data: result,
   });
 });
@@ -118,4 +146,5 @@ export const ProductController = {
   deleteProduct,
   getAllDiscoutProduct,
   getSingleProduct,
+  createProductDraft,
 };

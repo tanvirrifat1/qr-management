@@ -8,31 +8,37 @@ const router = express.Router();
 router.get(
   '/account-msg-response',
   auth(USER_ROLES.SELLER),
-  SellerAccountHelthController.accountMsgResponse
+  SellerAccountHelthController.accountMsgResponse,
 );
 
 router.get(
   '/on-time-delivery-ratio',
   auth(USER_ROLES.SELLER),
-  SellerAccountHelthController.onTimeDeliveryRatio
+  SellerAccountHelthController.onTimeDeliveryRatio,
 );
 
 router.get(
   '/all-review-and-rating-ratio',
   auth(USER_ROLES.SELLER),
-  SellerAccountHelthController.getAllReviewAndRatingRatio
+  SellerAccountHelthController.getAllReviewAndRatingRatio,
 );
 
 router.get(
   '/account-health-ratio',
   auth(USER_ROLES.SELLER),
-  SellerAccountHelthController.getAccountHealthRatio
+  SellerAccountHelthController.getAccountHealthRatio,
 );
 
 router.get(
   '/all-sales-report',
   auth(USER_ROLES.SELLER),
-  SellerAccountHelthController.getAllSalesReport
+  SellerAccountHelthController.getAllSalesReport,
+);
+
+router.get(
+  '/all-top-sales-products',
+  auth(USER_ROLES.SELLER),
+  SellerAccountHelthController.getAllTopSalesProducts,
 );
 
 export const SellerAccountHelthRoutes = router;

@@ -18,11 +18,25 @@ router.post(
   (req: Request, res: Response, next: NextFunction) => {
     if (req.body.data) {
       req.body = ProductValidation.createProductZodSchema.parse(
-        JSON.parse(req.body.data)
+        JSON.parse(req.body.data),
       );
     }
     return ProductController.createProductFromDb(req, res, next);
-  }
+  },
+);
+
+router.post(
+  '/create-product-draft',
+  uploadMultiple,
+  auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.SELLER),
+  (req: Request, res: Response, next: NextFunction) => {
+    if (req.body.data) {
+      req.body = ProductValidation.createProductZodSchema.parse(
+        JSON.parse(req.body.data),
+      );
+    }
+    return ProductController.createProductDraft(req, res, next);
+  },
 );
 
 router.patch(
@@ -39,26 +53,26 @@ router.patch(
 
     if (data) {
       const parsedData = ProductValidation.updateProductZodSchema.parse(
-        JSON.parse(data)
+        JSON.parse(data),
       );
 
       req.body = { ...parsedData, imagesToDelete };
     }
 
     return ProductController.updateProduct(req, res, next);
-  }
+  },
 );
 
 router.get(
   '/get-my-products',
   auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.SELLER),
-  ProductController.getMyProduct
+  ProductController.getMyProduct,
 );
 
 router.delete(
   '/delete-product/:id',
   auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.SELLER),
-  ProductController.deleteProduct
+  ProductController.deleteProduct,
 );
 
 // disable product

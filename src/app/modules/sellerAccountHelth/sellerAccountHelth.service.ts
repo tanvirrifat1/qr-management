@@ -4,6 +4,7 @@ import { Order } from '../order/order.model';
 import { Review } from '../review/review.model';
 import { Payment } from '../payment/payment.model';
 import { SellerWallet } from '../sellerWallet/sellerWallet.model';
+import { Product } from '../product/product.model';
 
 const accountMsgResponse = async (userId: string) => {
   const userObjectId = new Types.ObjectId(userId);
@@ -207,7 +208,7 @@ const getAllSalesReport = async (sellerId: string) => {
   data.forEach(item => {
     const monthName = new Date(
       item._id.year,
-      item._id.month - 1
+      item._id.month - 1,
     ).toLocaleString('en-US', { month: 'short' });
 
     monthlyReport[monthName] =
@@ -222,10 +223,55 @@ const getAllSalesReport = async (sellerId: string) => {
   };
 };
 
+//get all top sales products
+
+const getAllTopSalesProducts = async (
+  userId: string,
+  query: Record<string, unknown>,
+) => {
+  const { page, limit, ...filterData } = query;
+
+  const andConditions: any[] = [{ userId }];
+
+  if (Object.keys(filterData).length > 0) {
+    const filterConditions = Object.entries(filterData).map(
+      ([field, value]) => ({ [field]: value }),
+    );
+    andConditions.push({ $and: filterConditions });
+  }
+
+  const whereConditions = { $and: andConditions };
+
+  const pages = Number(page) || 1;
+  const size = Number(limit) || 10;
+  const skip = (pages - 1) * size;
+
+  const result = await Product.find(whereConditions)
+    .sort({
+      rating: -1, // ⭐ rating 5 first
+      count: -1, // 🔥 top sold first
+      createdAt: -1, // 🕒 latest as fallback
+    })
+    .skip(skip)
+    .limit(size)
+    .lean();
+
+  const count = await Product.countDocuments(whereConditions);
+
+  return {
+    result,
+    meta: {
+      page: pages,
+      total: count,
+    },
+  };
+};
+
 export const SellerAccountHelthService = {
   accountMsgResponse,
   onTimeDeliveryRatio,
   getAllReviewAndRatingRatio,
   getAccountHealthRatio,
   getAllSalesReport,
+  getAllTopSalesProducts,
 };

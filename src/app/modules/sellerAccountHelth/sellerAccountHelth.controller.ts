@@ -27,9 +27,8 @@ const onTimeDeliveryRatio = catchAsync(async (req, res) => {
 
 const getAllReviewAndRatingRatio = catchAsync(async (req, res) => {
   const userId = req.user.id;
-  const result = await SellerAccountHelthService.getAllReviewAndRatingRatio(
-    userId
-  );
+  const result =
+    await SellerAccountHelthService.getAllReviewAndRatingRatio(userId);
   sendResponse(res, {
     success: true,
     statusCode: StatusCodes.OK,
@@ -60,10 +59,25 @@ const getAllSalesReport = catchAsync(async (req, res) => {
   });
 });
 
+const getAllTopSalesProducts = catchAsync(async (req, res) => {
+  const userId = req.user.id;
+  const result = await SellerAccountHelthService.getAllTopSalesProducts(
+    userId,
+    req.query,
+  );
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: 'Top sales product retrive successfully',
+    data: result,
+  });
+});
+
 export const SellerAccountHelthController = {
   accountMsgResponse,
   onTimeDeliveryRatio,
   getAllReviewAndRatingRatio,
   getAccountHealthRatio,
   getAllSalesReport,
+  getAllTopSalesProducts,
 };

@@ -17,7 +17,7 @@ const createProductZodSchema = z.object({
     .array(
       z.string({
         required_error: 'Size is required',
-      })
+      }),
     )
     .nonempty(),
 
@@ -25,7 +25,7 @@ const createProductZodSchema = z.object({
     .array(
       z.string({
         required_error: 'color is required',
-      })
+      }),
     )
     .nonempty(),
 
@@ -72,6 +72,7 @@ const createProductZodSchema = z.object({
   }),
 
   rating: z.number().optional(),
+  status: z.string().optional(),
 });
 
 const updateProductZodSchema = z.object({

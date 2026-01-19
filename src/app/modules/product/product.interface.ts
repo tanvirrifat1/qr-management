@@ -17,7 +17,7 @@ export type IProduct = {
   image: string[];
   rating?: number;
   count?: number;
-  status: 'active' | 'deleted';
+  status: 'active' | 'deleted' | 'draft';
   inStock: boolean;
   discount: number;
   frbricType: string;

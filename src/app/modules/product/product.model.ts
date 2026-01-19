@@ -40,7 +40,7 @@ const proudctSchema = new Schema<IProduct>(
     origin: { type: String, required: false },
     color: [{ type: String, required: false }],
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export const Product = model<IProduct>('Product', proudctSchema);

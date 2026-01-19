@@ -26,6 +26,27 @@ const createProductFromDb = async (payload: IProduct) => {
   return Product.create(payload);
 };
 
+const createProductDraft = async (payload: IProduct) => {
+  const { categoryId, subCategoryId } = payload;
+
+  // Fetch both in parallel for better performance
+  const [category, subCategory] = await Promise.all([
+    Category.findById(categoryId),
+    SubCategory.findById(subCategoryId),
+  ]);
+
+  // Validate independently
+  if (!category) {
+    throw new ApiError(StatusCodes.NOT_FOUND, `Category not found`);
+  }
+
+  if (!subCategory) {
+    throw new ApiError(StatusCodes.NOT_FOUND, `Subcategory not found`);
+  }
+
+  return Product.create(payload);
+};
+
 // const getAllProducts = async (query: Record<string, unknown>) => {
 //   const { page, limit, searchTerm, categoryName, subCategory, ...filterData } =
 //     query;
@@ -178,7 +199,7 @@ const getAllProducts = async (query: Record<string, unknown>) => {
   // 🔹 Other dynamic filters
   if (Object.keys(filterData).length > 0) {
     const filterConditions = Object.entries(filterData).map(
-      ([field, value]) => ({ [field]: value })
+      ([field, value]) => ({ [field]: value }),
     );
     anyConditions.push({ $and: filterConditions });
   }
@@ -201,8 +222,9 @@ const getAllProducts = async (query: Record<string, unknown>) => {
       select: 'title -_id',
     })
     .sort({
-      rating: -1,
-      createdAt: -1,
+      rating: -1, // ⭐ rating 5 first
+      count: -1, // 🔥 top sold first
+      createdAt: -1, // 🕒 latest as fallback
     })
     .skip(skip)
     .limit(size)
@@ -237,7 +259,7 @@ const updateProduct = async (id: string, payload: UpdateProductPayload) => {
   }
 
   isExistProduct.image = isExistProduct.image.filter(
-    (img: string) => !payload.imagesToDelete?.includes(img)
+    (img: string) => !payload.imagesToDelete?.includes(img),
   );
 
   const updateImages = payload.image
@@ -269,6 +291,7 @@ const getMyProduct = async (userId: string, query: Record<string, unknown>) => {
     andConditions.push({
       $or: [
         { title: { $regex: term, $options: 'i' } },
+        { status: { $regex: term, $options: 'i' } },
         { brand: { $regex: term, $options: 'i' } },
         {
           $expr: {
@@ -327,7 +350,7 @@ const deleteProduct = async (id: string) => {
     { status: 'deleted' },
     {
       new: true,
-    }
+    },
   );
 
   return result;
@@ -341,7 +364,7 @@ const getAllDiscoutProduct = async (query: Record<string, unknown>) => {
 
   if (Object.keys(filterData).length > 0) {
     const filterConditions = Object.entries(filterData).map(
-      ([field, value]) => ({ [field]: value })
+      ([field, value]) => ({ [field]: value }),
     );
     andConditions.push({ $and: filterConditions });
   }
@@ -377,4 +400,5 @@ export const ProductServiceHello = {
   deleteProduct,
   getAllDiscoutProduct,
   getSingleProduct,
+  createProductDraft,
 };
