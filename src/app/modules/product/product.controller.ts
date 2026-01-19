@@ -126,6 +126,20 @@ const getAllDiscoutProduct = catchAsync(async (req, res) => {
   });
 });
 
+const getProductByUserId = catchAsync(async (req, res) => {
+  const result = await ProductServiceHello.getProductByUserId(
+    req.params.id,
+    req.query,
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: 'product retrive successfully',
+    data: result,
+  });
+});
+
 //getSingleProduct
 const getSingleProduct = catchAsync(async (req, res) => {
   const result = await ProductServiceHello.getSingleProduct(req.params.id);
@@ -146,5 +160,6 @@ export const ProductController = {
   deleteProduct,
   getAllDiscoutProduct,
   getSingleProduct,
+  getProductByUserId,
   createProductDraft,
 };

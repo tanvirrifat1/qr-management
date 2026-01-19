@@ -75,6 +75,12 @@ router.delete(
   ProductController.deleteProduct,
 );
 
+router.get(
+  '/buyer-for-product/:id',
+  auth(USER_ROLES.BUYER),
+  ProductController.getProductByUserId
+);
+
 // disable product
 router.get('/disable-product', ProductController.getAllDiscoutProduct);
 
