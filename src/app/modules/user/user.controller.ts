@@ -20,7 +20,7 @@ const createBuyerToDB = catchAsync(
       message:
         'Please check your email to verify your account. We have sent you an OTP to complete the registration process.',
     });
-  }
+  },
 );
 
 const updateProfile = catchAsync(
@@ -46,7 +46,7 @@ const updateProfile = catchAsync(
 
     const updatedProfile = await UserService.updateProfileToDB(
       user,
-      updateData
+      updateData,
     );
 
     sendResponse(res, {
@@ -55,7 +55,7 @@ const updateProfile = catchAsync(
       message: 'Profile updated successfully',
       data: updatedProfile,
     });
-  }
+  },
 );
 
 const suspendedUser = catchAsync(async (req: Request, res: Response) => {
@@ -91,10 +91,22 @@ const getUserDetails = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getAllUsers = catchAsync(async (req: Request, res: Response) => {
+  const result = await UserService.getAllUsers(req.query);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: 'users retrived successfully',
+    data: result,
+  });
+});
+
 export const UserController = {
   createBuyerToDB,
   updateProfile,
   suspendedUser,
   activeUser,
   getUserDetails,
+  getAllUsers,
 };

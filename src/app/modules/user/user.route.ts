@@ -11,7 +11,7 @@ const router = express.Router();
 router.post(
   '/create-buyer',
   validateRequest(UserValidation.createUserZodSchema),
-  UserController.createBuyerToDB
+  UserController.createBuyerToDB,
 );
 
 router.patch(
@@ -22,28 +22,28 @@ router.patch(
     USER_ROLES.ADMIN,
     USER_ROLES.BUYER,
     USER_ROLES.SUPER_ADMIN,
-    USER_ROLES.SELLER
+    USER_ROLES.SELLER,
   ),
   (req: Request, res: Response, next: NextFunction) => {
     if (req.body.data) {
       req.body = UserValidation.updateZodSchema.parse(
-        JSON.parse(req.body.data)
+        JSON.parse(req.body.data),
       );
     }
     return UserController.updateProfile(req, res, next);
-  }
+  },
 );
 
 router.patch(
   '/suspended-user/:id',
   auth(USER_ROLES.SUPER_ADMIN),
-  UserController.suspendedUser
+  UserController.suspendedUser,
 );
 
 router.patch(
   '/active-user/:id',
   auth(USER_ROLES.SUPER_ADMIN),
-  UserController.activeUser
+  UserController.activeUser,
 );
 
 router.get(
@@ -52,9 +52,15 @@ router.get(
     USER_ROLES.SUPER_ADMIN,
     USER_ROLES.ADMIN,
     USER_ROLES.SELLER,
-    USER_ROLES.BUYER
+    USER_ROLES.BUYER,
   ),
-  UserController.getUserDetails
+  UserController.getUserDetails,
+);
+
+router.get(
+  '/get-all-users',
+  auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN),
+  UserController.getAllUsers,
 );
 
 export const UserRoutes = router;

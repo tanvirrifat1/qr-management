@@ -18,14 +18,14 @@ const createBuyerToDB = async (payload: IUser) => {
   ) {
     throw new ApiError(
       StatusCodes.FORBIDDEN,
-      'You cannot create an Admin or Super Admin user from this route.'
+      'You cannot create an Admin or Super Admin user from this route.',
     );
   }
 
   if (payload.verified === true) {
     throw new ApiError(
       StatusCodes.BAD_REQUEST,
-      'Cannot create a verified user directly.'
+      'Cannot create a verified user directly.',
     );
   }
 
@@ -54,7 +54,7 @@ const createBuyerToDB = async (payload: IUser) => {
   };
   const updatedUser = await User.findOneAndUpdate(
     { _id: result._id },
-    { $set: { authentication } }
+    { $set: { authentication } },
   );
   if (!updatedUser) {
     throw new ApiError(StatusCodes.NOT_FOUND, 'User not found for update');
@@ -65,7 +65,7 @@ const createBuyerToDB = async (payload: IUser) => {
 
 const updateProfileToDB = async (
   user: JwtPayload,
-  payload: Partial<IUser>
+  payload: Partial<IUser>,
 ): Promise<Partial<IUser | null>> => {
   const { id } = user;
   const isExistUser = await User.isExistUserById(id);
@@ -90,7 +90,7 @@ const suspendedUser = async (id: string) => {
   const updatedUser = await User.findOneAndUpdate(
     { _id: id },
     { block: true },
-    { new: true }
+    { new: true },
   );
 
   if (!updatedUser) {
@@ -109,7 +109,7 @@ const suspendedUser = async (id: string) => {
       If you believe this is a mistake, please contact support.
 
       Thank you.
-    `.trim()
+    `.trim(),
     );
   }
 
@@ -120,7 +120,7 @@ const activeUser = async (id: string) => {
   const updatedUser = await User.findOneAndUpdate(
     { _id: id },
     { block: false },
-    { new: true }
+    { new: true },
   );
 
   if (!updatedUser) {
@@ -141,7 +141,7 @@ const activeUser = async (id: string) => {
       If you have any questions or need assistance, feel free to contact our support team.
 
       Thank you.
-    `.trim()
+    `.trim(),
     );
   }
 
@@ -157,10 +157,35 @@ const getUserDetails = async (id: string) => {
   return user;
 };
 
+const getAllUsers = async (query: Record<string, unknown>) => {
+  const page = Number(query.page) || 1;
+  const limit = Number(query.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  const filter = {
+    role: { $in: [USER_ROLES.BUYER, USER_ROLES.SELLER] },
+  };
+
+  const [result, total] = await Promise.all([
+    User.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
+    User.countDocuments(filter),
+  ]);
+
+  return {
+    data: result,
+    meta: {
+      page,
+      limit,
+      total,
+    },
+  };
+};
+
 export const UserService = {
   createBuyerToDB,
   updateProfileToDB,
   suspendedUser,
   activeUser,
   getUserDetails,
+  getAllUsers,
 };
