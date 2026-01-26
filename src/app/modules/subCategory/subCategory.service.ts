@@ -117,8 +117,34 @@ const getSubCategoryForAdmin = async (query: Record<string, unknown>) => {
   };
 };
 
+const updateSubCategory = async (id: string, payload: ISubCategory) => {
+  const isExist = await SubCategory.findById(id);
+  if (!isExist) {
+    throw new ApiError(StatusCodes.NOT_FOUND, 'SubCategory not found');
+  }
+
+  const result = await SubCategory.findByIdAndUpdate(id, payload, {
+    new: true,
+  });
+  return result;
+};
+
+const deleteCategoryFromDB = async (id: string) => {
+  const isExist = await SubCategory.findById(id);
+
+  if (!isExist) {
+    throw new ApiError(StatusCodes.NOT_FOUND, 'SubCategory not found');
+  }
+
+  const result = await SubCategory.findByIdAndDelete(id);
+
+  return result;
+};
+
 export const SubCategoryService = {
   createSubCategory,
   getSubCategory,
   getSubCategoryForAdmin,
+  updateSubCategory,
+  deleteCategoryFromDB,
 };

@@ -7,19 +7,31 @@ const router = express.Router();
 router.post(
   '/create-sub-category',
   auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN),
-  SubCategoryController.createSubCategory
+  SubCategoryController.createSubCategory,
+);
+
+router.patch(
+  '/update-sub-category/:id',
+  auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN),
+  SubCategoryController.updateSubCategory,
+);
+
+router.delete(
+  '/delete-sub-category/:id',
+  auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN),
+  SubCategoryController.deleteCategoryFromDB,
 );
 
 router.get(
   '/get-sub-category/:id',
   // auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN),
-  SubCategoryController.getSubCategory
+  SubCategoryController.getSubCategory,
 );
 
 router.get(
   '/get-sub-category',
   // auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN),
-  SubCategoryController.getSubCategoryForAdmin
+  SubCategoryController.getSubCategoryForAdmin,
 );
 
 export const SubCategoryRoutes = router;

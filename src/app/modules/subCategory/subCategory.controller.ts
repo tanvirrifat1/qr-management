@@ -17,7 +17,7 @@ const createSubCategory = catchAsync(async (req, res) => {
 const getSubCategory = catchAsync(async (req, res) => {
   const result = await SubCategoryService.getSubCategory(
     req.query,
-    req.params.id
+    req.params.id,
   );
 
   sendResponse(res, {
@@ -39,8 +39,35 @@ const getSubCategoryForAdmin = catchAsync(async (req, res) => {
   });
 });
 
+const updateSubCategory = catchAsync(async (req, res) => {
+  const result = await SubCategoryService.updateSubCategory(
+    req.params.id,
+    req.body,
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.CREATED,
+    message: 'SubCategory updated successfully',
+    data: result,
+  });
+});
+
+const deleteCategoryFromDB = catchAsync(async (req, res) => {
+  const result = await SubCategoryService.deleteCategoryFromDB(req.params.id);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.CREATED,
+    message: 'SubCategory deleted successfully',
+    data: result,
+  });
+});
+
 export const SubCategoryController = {
   createSubCategory,
   getSubCategory,
   getSubCategoryForAdmin,
+  updateSubCategory,
+  deleteCategoryFromDB,
 };
