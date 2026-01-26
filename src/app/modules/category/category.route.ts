@@ -14,11 +14,11 @@ router.post(
   (req: Request, res: Response, next: NextFunction) => {
     if (req.body.data) {
       req.body = CategoryValidation.createCategoryZodSchema.parse(
-        JSON.parse(req.body.data)
+        JSON.parse(req.body.data),
       );
     }
     return CategoryController.createCategoryToDB(req, res, next);
-  }
+  },
 );
 
 router.patch(
@@ -28,15 +28,21 @@ router.patch(
   (req: Request, res: Response, next: NextFunction) => {
     if (req.body.data) {
       req.body = CategoryValidation.updateCategoryZodSchema.parse(
-        JSON.parse(req.body.data)
+        JSON.parse(req.body.data),
       );
     }
     return CategoryController.uppdateProductToDB(req, res, next);
-  }
+  },
 );
 
 router.get('/get-category', CategoryController.getAllCategoryFromDB);
 
 router.get('/get-category/:id', CategoryController.getSingleCategoryFromDB);
+
+router.delete(
+  '/delete/:id',
+  auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN),
+  CategoryController.deleteCategoryFromDB,
+);
 
 export const CategoryRoutes = router;

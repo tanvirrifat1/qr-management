@@ -65,9 +65,21 @@ const getSingleCategoryFromDB = catchAsync(async (req, res) => {
   });
 });
 
+const deleteCategoryFromDB = catchAsync(async (req, res) => {
+  const result = await CategoryService.deleteCategoryFromDB(req.params.id);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: 'Category deleted successfully',
+    data: result,
+  });
+});
+
 export const CategoryController = {
   createCategoryToDB,
   uppdateProductToDB,
   getAllCategoryFromDB,
   getSingleCategoryFromDB,
+  deleteCategoryFromDB,
 };

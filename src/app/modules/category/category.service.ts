@@ -19,7 +19,7 @@ const getAllCategoryFromDB = async (query: Record<string, unknown>) => {
 
   if (Object.keys(filterData).length > 0) {
     const filterConditions = Object.entries(filterData).map(
-      ([field, value]) => ({ [field]: value })
+      ([field, value]) => ({ [field]: value }),
     );
     andConditions.push({ $and: filterConditions });
   }
@@ -66,9 +66,22 @@ const getSingleCategoryFromDB = async (id: string) => {
   return isExist;
 };
 
+const deleteCategoryFromDB = async (id: string) => {
+  const isExist = await Category.findById(id);
+
+  if (!isExist) {
+    throw new ApiError(StatusCodes.NOT_FOUND, 'Category not found');
+  }
+
+  const result = await Category.findByIdAndDelete(id);
+
+  return result;
+};
+
 export const CategoryService = {
   createCategoryToDB,
   uppdateProductToDB,
   getAllCategoryFromDB,
   getSingleCategoryFromDB,
+  deleteCategoryFromDB,
 };
